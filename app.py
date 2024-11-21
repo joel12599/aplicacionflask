@@ -1,21 +1,30 @@
-from flask import Flask
+from flask import Flask, request, jsonify  
 
-app = Flask(__name__)
+app = Flask(__name__)  
 
-@app.route("/")
-def home():
-    return "¡Hola, Flask!"
+usuarios = []  
 
-if __name__ == "__main__":
-    app.run(debug=True)
-
-
+@app.route("/")  
+def home():  
+    return "¡Hola, Flask!"  
 
 @app.route("/usuarios", methods=["POST"])  
 def crear_usuario():  
-    nuevo_U = request.get_json()  
-    nuevo_u["id"] = len(usuarios) + 1
-    usuarios.append(nuevo_usuario)  
-    return jsonify({"mensaje": "listo vale mia", "usuario": nuevo_U}), 201  
+    usuario_U = request.get_json()  
+    usuario_U["id"] = len(usuarios) + 1  
+    usuarios.append(usuario_U)  
+    return jsonify({"mensaje": "Usuario creado correctamente", "usuario": usuario_U}), 201  
 
 @app.route("/usuarios", methods=["GET"])  
+def obtener_usuarios():  
+    return jsonify({"usuarios": usuarios})  
+
+@app.route('/usuarios/<int:id>', methods=['GET'])  
+def obtener_usuario(id):  
+    for usuario in usuarios:  
+        if usuario['id'] == id:  
+            return jsonify({"usuario": usuario})  
+    return jsonify({"error": "No encontrado"}), 404  
+
+if __name__ == "__main__":  
+    app.run(debug=True)
